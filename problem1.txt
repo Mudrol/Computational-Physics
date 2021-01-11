@@ -1,0 +1,1 @@
+I'm going to use Windows with git bash for windows. As text editor I will be using Nano.
