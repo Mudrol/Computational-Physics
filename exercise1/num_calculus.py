@@ -25,7 +25,7 @@ def simpson_int(f, x):
     has even spaces. Error term is O(h^3)
     """
     N = len(x)-1
-    h = x[2]-x[1]
+    h = x[1]-x[0]
     s = 0.
     for i in range(1, N, 2):
         s += (f[i-1] + 4*f[i] + f[i+1])
@@ -44,12 +44,13 @@ def monte_carlo_integration(fun, xmin, xmax, blocks=10, iters=100):
     """
     block_values = np.zeros((blocks,))
     L = xmax-xmin
-    for block in range(blocks):
+
     # Calculate the function value at random point x and sum them together
+    for block in range(blocks):
 
         for i in range(iters):
             x = xmin+np.random.rand()*L
-            block_values[block]+=fun(x)
+            block_values[block] += fun(x)
         # Mean value of the function values
         block_values[block] /= iters
     # Sum all the blocks together and divide by amount of blocks
@@ -90,9 +91,9 @@ def test_simpson_int(I, h):
 def test_monte_carlo_integration(I, dI):
     """
     Function tests the preciseness of the monte carlo integral
-    evaluation function being inside the error term 2*dI.
+    evaluation function being inside the error term 2*dI for 95% of the time.
     """
-    return (abs(1.-I) < 2*dI)
+    return (abs(1.-I) < dI)
 
 
 def main():
@@ -113,9 +114,9 @@ def main():
     print(test_second_derivative(dx, sd))
 
     # Simpson integral
-    x = np.linspace(0,np.pi/2,100)
+    x = np.linspace(0, np.pi/2, 100)
     f = np.sin(x)
-    I = simpson_int(f,x)
+    I = simpson_int(f, x)
     h = x[2]-x[1]
     print("\n")
     print(I)
@@ -123,10 +124,11 @@ def main():
 
     # Monte Carlo integral
     def func(x): return np.sin(x)
-    I,dI=monte_carlo_integration(func,0.,np.pi/2,10,100)
+    I, dI = monte_carlo_integration(func, 0., np.pi/2, 10, 100)
     print("\n")
-    print("Integrated value: {0:0.5f} +/- {1:0.5f}".format(I,2*dI))
-    print(test_monte_carlo_integration(I, dI))
+    print("Integrated value: {0:0.5f} +/- {1:0.5f}".format(I, 2*dI))
+    print(test_monte_carlo_integration(I, 2*dI))
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()
