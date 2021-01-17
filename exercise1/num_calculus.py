@@ -1,4 +1,8 @@
-""" comments for the file here """
+"""
+This program numerically approximates derivatives and integrals of mathematical
+functions. Supports first and second derivatives, Simpson integral and
+Monte Carlo integration
+"""
 # import needed packages, e.g., import numpy as np
 import numpy as np
 
