@@ -197,7 +197,8 @@ def testacc(f, s, dim):
     """
     Tests the accuracy of the interpolation with the average of squared difference.
     Takes the analytical values f and interpolated values s as arrays, and also
-    the dimension we are testing as a string.
+    the dimension we are testing as a string. Also returns the error for
+    future plotting
     """
     totdiff = 0.
 
@@ -207,6 +208,7 @@ def testacc(f, s, dim):
     sqdavg = totdiff/len(f)
     print("Average of squared difference in", dim, "with", len(f), \
           "test points:", "{:0.4f}".format(sqdavg))
+    return sqdavg
 
 
 def main():
@@ -224,14 +226,14 @@ def main():
     ax1d.set_title('function')
 
     # Test points and indeces
-    xind = np.array([13,16,23,63,73,97])
+    xind = np.array([13,16,23,42,73,97])
     xpts = xx[xind]
     fvals = np.sin(xpts)
 
     # get interpolated values
     func = lin1d.eval1d(xx)
     interpvals = func[xind]
-    testacc(fvals,interpvals, "1d")
+    err1 = testacc(fvals,interpvals, "1d")
 
 
     # 2d example
@@ -260,15 +262,15 @@ def main():
 
     # 2d testing
     # Test points and indeces
-    xind = np.array([13,16,23,32,43,23, 5])
-    yind = np.array([35,13,12,49,22,6, 46])
+    xind = np.array([13,16,23,32,43,23,5])
+    yind = np.array([35,13,12,49,22,6,46])
     xpts = x[xind]
     ypts = y[yind]
     fvals = xpts*(np.exp(-1.0*(xpts*xpts+ypts*ypts)))
 
     # get interpolated values
     interpvals = Z[xind,yind]
-    testacc(fvals,interpvals, "2d")
+    err2 = testacc(fvals,interpvals, "2d")
 
     
     # 3d example
@@ -303,11 +305,16 @@ def main():
 
     # get interpolated values
     interpvals = F[xind,yind,zind]
-    testacc(fvals,interpvals, "3d")
+    err3 = testacc(fvals,interpvals, "3d")
 
-    # TODO: PLOT ERRORS!
-    #plterr = plt.figure()
-
+    # Error plot
+    dims = ["1d","2d","3d"]
+    errs = [err1,err2,err3]
+    errfig = plt.figure()
+    axerr = errfig.add_subplot(111)
+    axerr.bar(dims,errs)
+    axerr.set_ylabel("Average squared error")
+    axerr.set_title("Average squared error for 1d, 2d and 3d cases")
 
     plt.show()
 

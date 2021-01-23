@@ -11,6 +11,7 @@ By Ilkka Kylanpaa on January 2019
 
 from numpy import *
 from matplotlib.pyplot import *
+from linear_interp import testacc, sqdiff
 
 
 """
@@ -192,11 +193,11 @@ class spline:
         #end if
             
     def eval1d(self,x):
-    """
-    Evaluates the value of a 1d function using CHS, takes the spline class and the
-    space where the function wants to be approximated in, and returns the
-    interpolated function
-    """
+        """
+        Evaluates the value of a 1d function using CHS, takes the spline class and the
+        space where the function wants to be approximated in, and returns the
+        interpolated function
+        """
         if isscalar(x):
             x=array([x])
         N=len(self.x)-1
@@ -218,11 +219,11 @@ class spline:
     #end eval1d
 
     def eval2d(self,x,y):
-    """
-    Evaluates the value of a 2d function using CHS, takes the spline class and the
-    space where the function wants to be approximated in, and returns the
-    interpolated function
-    """
+        """
+        Evaluates the value of a 2d function using CHS, takes the spline class and the
+        space where the function wants to be approximated in, and returns the
+        interpolated function
+        """
     
         if isscalar(x):
             x=array([x])
@@ -268,11 +269,11 @@ class spline:
     #end eval2d
 
     def eval3d(self,x,y,z):
-    """
-    Evaluates the value of a 3d function using CHS, takes the spline class and the
-    space where the function wants to be approximated in, and returns the
-    interpolated function
-    """
+        """
+        Evaluates the value of a 3d function using CHS, takes the spline class and the
+        space where the function wants to be approximated in, and returns the
+        interpolated function
+        """
         if isscalar(x):
             x=array([x])
         if isscalar(y):
@@ -362,6 +363,17 @@ def main():
     plot(xx,spl1d.eval1d(xx))
     plot(x,y,'o',xx,sin(xx),'r--')
     title('function')
+
+    # Test points and indeces
+    xind = np.array([13,16,23,42,73,97])
+    xpts = xx[xind]
+    fvals = np.sin(xpts)
+
+    # get interpolated values
+    func = spl1d.eval1d(xx)
+    interpvals = func[xind]
+    err1 = testacc(fvals,interpvals, "1d")
+
     
     # 2d example
     fig=figure()
@@ -382,6 +394,18 @@ def main():
     Z = spl2d.eval2d(x,y)
     ax2.pcolor(X,Y,Z)
     ax2.set_title('interpolated')
+
+    # 2d testing
+    # Test points and indeces
+    xind = np.array([13,16,23,32,43,23,5])
+    yind = np.array([35,13,12,49,22,6,46])
+    xpts = x[xind]
+    ypts = y[yind]
+    fvals = xpts*(np.exp(-1.0*(xpts*xpts+ypts*ypts)))
+
+    # get interpolated values
+    interpvals = Z[xind,yind]
+    err2 = testacc(fvals,interpvals, "2d")
 
     # 3d example
     x=linspace(0.0,3.0,10)
@@ -404,6 +428,29 @@ def main():
     F=spl3d.eval3d(x,y,z)
     ax2.pcolor(X,Y,F[...,int(len(z)/2)])
     ax2.set_title('interpolated')
+
+    #3d testing
+    # Test points and indeces
+    xind = np.array([13,37,24,12,42,7,3])
+    yind = np.array([1,42,23,35,12,32,14])
+    zind = np.array([43,17,34,12,7,46,12])
+    xpts = x[xind]
+    ypts = y[yind]
+    zpts = z[zind]
+    fvals = (xpts+ypts+zpts)*np.exp(-1.0*(xpts*xpts+ypts*ypts+zpts*zpts))
+
+    # get interpolated values
+    interpvals = F[xind,yind,zind]
+    err3 = testacc(fvals,interpvals, "3d")
+
+    # Error plot
+    dims = ["1d","2d","3d"]
+    errs = [err1,err2,err3]
+    errfig = figure()
+    axerr = errfig.add_subplot(111)
+    axerr.bar(dims,errs)
+    axerr.set_ylabel("Average squared error")
+    axerr.set_title("Average squared error for 1d, 2d and 3d cases")
 
     show()
 #end main
