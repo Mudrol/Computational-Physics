@@ -1,5 +1,7 @@
 """
-COMMENTS HERE
+FYS-4096 Computational Physics: Exercise 2, Problem 1: Integration
+
+Made by: Matias Hiillos
 """
 
 import numpy as np
@@ -9,12 +11,12 @@ from scipy.integrate import simps
 
 def integral_c(ra, rb):
 
-    # (psi)^2
-    def psi2(x,y,z): return (np.exp(-2*np.sqrt(x**2+y**2+z**2))/(np.pi))
+    def psi(x,y,z): return (np.exp(-(np.sqrt(x**2+y**2+z**2)))/(np.sqrt(np.pi)))
     def r(x,y,z): return (np.sqrt(x**2+y**2+z**2))
+    x,y,z = np.linspace(-10,10,100)
 
     # Function to be integrated
-    fc = 
+    fc = (psi(x-ra[0],y-ra[1],z-ra[2]))**2/(r(x-rb[0],y-rb[1],z-rb[2]))
     
 
 def main():
@@ -68,7 +70,7 @@ def main():
     # Goal: calculate the value of the integral 
 
     # 5 test points
-    testpts = [[0,0,0], [1,0,0], [1,1,1], [1,2,0], [0,0,3]]
+    testpts = [[0,0,0], [1,0,0], [1,1,1], [1,2,0]]
 
 
 
