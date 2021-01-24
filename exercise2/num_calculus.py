@@ -3,6 +3,7 @@ This module contains functions for numerical calculus:
 - first and second derivatives
 - 1D integrals: Riemann, trapezoid, Simpson, 
   and Monte Carlo with uniform random numbers
+- N-dimensional numerical gradient
 """
 
 import numpy as np
@@ -100,7 +101,22 @@ def monte_carlo_integration(fun,xmin,xmax,blocks,iters):
     dI = L*np.std(block_values)/np.sqrt(blocks)
     return I, dI 
 
+def  numerical_gradient(f,r,dx):
+    """
+    N-dimensional numerical gradient, first derivatives calculated with
+    symmetric two-point formula, which has accuracy of O(h^2). Returns the
+    gradient as a array of length N.
+    """
 
+    # Check for 1D case
+    if np.isscalar(r): 
+        return first_derivative(f,r,dx)
+    else:
+        N = len(r)
+        grad = np.zeros(N)
+        for i in range(N):
+            grad[i] = (f(r+dx)[i]-f(r-dx)[i])/2/dx[i]
+        return grad
 
 """ Test routines for unit testing """
 def test_first_derivative(tolerance=1.0e-3):
@@ -218,6 +234,23 @@ def test_monte_carlo_integration():
         print('Monte Carlo integration is NOT ok!!')
     return working
 
+def test_num_grad():
+    """
+    Test routine for N-dimensional numerical gradient.
+    """
+    r = np.array([1,1,1])
+    dx = np.array([0.001,0.001,0.001])
+    grad_est = numerical_gradient(test_fun_numgrad,r,dx)
+    grad_exact = test_fun_numgrad_grad(r)
+    err = np.abs(grad_est-grad_exact)
+    i = 0
+    for dim in err:
+        if(dim>dx[i]**2):
+            print("Numerical gradient evaluation is NOT ok!")
+            return False
+        i+=1
+    print("Numerical gradient evaluation is OK")
+    return True
 
 """ Analytical test function definitions """
 def test_fun(x):
@@ -251,6 +284,22 @@ def test_fun2_int(a,b):
     """
     return -np.cos(b)+np.cos(a)
 
+def test_fun_numgrad(x):
+    """
+    test function given in problem 4
+    """
+    N = 3
+    f = np.zeros(N)
+    f[0] = np.sin(x[0])
+    for i in range(N-2):
+        f[i+1] = x[i+1]**2
+    f[N-1] = np.cos(x[1])
+    return f
+
+def test_fun_numgrad_grad(r):
+    grad = [np.cos(r[0]),2*r[1],-1*np.sin(r[2])]
+    return grad
+
 """ Tests performed in main """
 def main():
     """ Performing all the tests related to this module """
@@ -261,6 +310,8 @@ def main():
     test_simpson_integration()
     test_simpson_nonuniform()
     test_monte_carlo_integration()
+    test_num_grad()
+
 
 if __name__=="__main__":
     main()
