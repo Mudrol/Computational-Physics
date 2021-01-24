@@ -115,7 +115,7 @@ def  numerical_gradient(f,r,dx):
         N = len(r)
         grad = np.zeros(N)
         for i in range(N):
-            grad[i] = (f(r+dx)[i]-f(r-dx)[i])/2/dx[i]
+            grad[i] = (f(r+dx)[i]-f(r-dx)[i])/2/dx
         return grad
 
 """ Test routines for unit testing """
@@ -239,13 +239,13 @@ def test_num_grad():
     Test routine for N-dimensional numerical gradient.
     """
     r = np.array([1,1,1])
-    dx = np.array([0.001,0.001,0.001])
+    dx = 0.001
     grad_est = numerical_gradient(test_fun_numgrad,r,dx)
     grad_exact = test_fun_numgrad_grad(r)
     err = np.abs(grad_est-grad_exact)
     i = 0
     for dim in err:
-        if(dim>dx[i]**2):
+        if(dim>dx**2):
             print("Numerical gradient evaluation is NOT ok!")
             return False
         i+=1
