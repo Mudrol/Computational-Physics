@@ -1,7 +1,7 @@
 """
 FYS-4096 Computational Physics: Exercise 3, Problem 1: 2D Integral revisited
-Calculating the integral using 20 different grid spacings. It appears that
-having an odd-value as points gives more accurate result.
+Calculating the integral using 20 different grid spacings. 
+Having an odd-value as grid points gives more accurate result.
 
 Made by: Matias Hiillos
 """
