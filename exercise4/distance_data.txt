@@ -1,0 +1,6 @@
+file: dft_chargedensity1.xsf
+
+l(V1-O2) =  1.93300(0) Å
+l(V1-O4) =  1.92159(0) Å
+
+phi(O4-V1-O2) =  90.0000(0) deg.
