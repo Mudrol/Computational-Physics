@@ -13,15 +13,7 @@ from read_xsf_example import read_example_xsf_density
 
 def electron_density_line(rho, lattice, grid):
 
-    # 500 points takes too long to compute
-    pts = 50
-
-    # Compute points for the path
-    r_0 = np.array([0.1,0.1,2.8528])
-    r_1 = np.array([4.45,4.45,2.8528])
-    x = np.linspace(r_0[0],r_1[0],pts)
-    y = np.linspace(r_0[1],r_1[2],pts)
-    z = np.linspace(r_0[2],r_1[2],pts)
+    pts = 500
 
     # Create grid points for spline class
     xx = np.linspace(0.,lattice[0,0],grid[0])
@@ -31,15 +23,25 @@ def electron_density_line(rho, lattice, grid):
     # Create spline object
     spl = spline_class.spline(x=xx,y=yy,z=zz,f=rho,dims=3)
 
-    # Calculate the electron density values along path
-    rho_line = spl.eval3d(x,y,z)
+    # Create the line path
+    r_0 = np.array([0.1,0.1,2.8528])
+    r_1 = np.array([4.45,4.45,2.8528])
+    t = np.linspace(0,1,pts)
 
+    rho_line = np.zeros(pts)
+    i = 0
+    for val in t:
+
+        r = (r_1-r_0)*val+r_0
+        # Calculate the electron density values along path
+        rho_line[i] = spl.eval3d(r[0],r[1],r[2])
+        i += 1
 
     # Plotting
     fig = plt.figure()
-    plt.plot(x,np.diag(rho_line[:,:,0]))
+    plt.plot(t,rho_line)
     plt.title("Electron density along the line")
-    plt.xlabel("x, y")
+    plt.xlabel("r length")
     plt.ylabel("Electron density")
 
     plt.show()
@@ -49,6 +51,7 @@ def electron_density_line(rho, lattice, grid):
     
 def main():
 
+    # Read the file 
     filename = 'dft_chargedensity1.xsf'
     rho, lattice, grid, shift = read_example_xsf_density(filename)
 

@@ -7,26 +7,29 @@ Made by: Matias Hiillos
 """
 
 import numpy as np
+from scipy.integrate import simps
 from read_xsf_example import read_example_xsf_density
 
 def number_of_electrons(rho, lattice, grid):
     """
-    Calculates the number of electrons in a lattice, utilizing
-    scalar triple product
+    Calculates the number of electrons in a cell.
     """
+    # Calculate points of the lattice in alpha space
+    alpha0 = np.linspace(0.,1,grid[0])
+    alpha1 = np.linspace(0.,1,grid[1])
+    alpha2 = np.linspace(0.,1,grid[2])
 
-    # Calculate the primitive vectors of the lattice
-    a = lattice[:,0]/grid[0]
-    b = lattice[:,1]/grid[1]
-    c = lattice[:,2]/grid[2]
+    # Volume of the lattice
+    det_A = np.linalg.det(lattice)
 
-    # Scalar triple product: V = (a x b) * c
-    V = np.dot(np.cross(a,b),c)
-
-    # rho = N/V
-    N = V*np.sum(rho)
-
+    # Integrate with simps in alpha space for all directions
+    # rho(r)dr = rho(A*alpha)*det(A)d(alpha)
+    rho_0 = simps(rho[:,0,0],alpha0)
+    rho_1 = simps(rho[0,:,0],alpha1)
+    rho_2 = simps(rho[0,0,:],alpha2)
+    N = det_A*(rho_0*rho_1*rho_2)
     return N
+
 
 def reciprocal_lattice_vectors(lattice):
     """
@@ -52,6 +55,7 @@ def main():
     print("Number of electrons:")
     print("Structure 1:", "{:.4f}".format(N_electrons1))
     print("Structure 2:", "{:.4f}".format(N_electrons2))
+    print("")
 
     B1 = reciprocal_lattice_vectors(lattice1)
     B2 = reciprocal_lattice_vectors(lattice2)
