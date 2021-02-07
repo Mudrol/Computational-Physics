@@ -14,20 +14,13 @@ def number_of_electrons(rho, lattice, grid):
     """
     Calculates the number of electrons in a cell.
     """
-    # Calculate points of the lattice in alpha space
-    alpha0 = np.linspace(0.,1,grid[0])
-    alpha1 = np.linspace(0.,1,grid[1])
-    alpha2 = np.linspace(0.,1,grid[2])
+    # Calculate the volume around a single block in grid using scalar triple
+    # product: a*(bxc)
+    block_volume = np.dot(np.cross(lattice[0]/grid[0],lattice[1]/grid[1]),lattice[2]/grid[2])
 
-    # Volume of the lattice
-    det_A = np.linalg.det(lattice)
+    # Calculate the amount of electrons at each block and sum them together
+    N = np.sum(block_volume * rho)
 
-    # Integrate with simps in alpha space for all directions
-    # rho(r)dr = rho(A*alpha)*det(A)d(alpha)
-    rho_0 = simps(rho[:,0,0],alpha0)
-    rho_1 = simps(rho[0,:,0],alpha1)
-    rho_2 = simps(rho[0,0,:],alpha2)
-    N = det_A*(rho_0*rho_1*rho_2)
     return N
 
 

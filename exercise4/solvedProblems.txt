@@ -1,3 +1,1 @@
-1,2x,3,4
-
-the number of electrons seems off in problem 2 at least for the first lattice, unable to tell why.
+1,2,3,4
