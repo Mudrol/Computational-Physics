@@ -41,7 +41,7 @@ def runge_kutta4(x,t,dt,func,**kwargs):
     return x+dt/6*(F1+2*F2+2*F3+F4), t+dt
 
 
-# Function 'handles' used for odeint and ivp
+# f(x,t)
 def pend(y, t, b, c):
     theta, omega = y
     dydt = [omega, -b*omega - c*np.sin(theta)]
