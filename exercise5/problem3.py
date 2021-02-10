@@ -34,6 +34,8 @@ def jacobi(phi, h, rho, N, tol=1e-4, count=0):
 
     """
     phi2 = phi.copy()
+
+    # Periodic boundary condition: Ignore first and last indices
     for i in range(1,N-1):
         for j in range(1,N-1):
             phi2[i,j] = 1/4 * (phi[i+1,j] + phi[i-1,j] + phi[i,j+1] + phi[i,j-1] + h**2/eps_0*rho[i,j])
@@ -62,15 +64,18 @@ def gs(phi, h, rho, N, tol=1e-4, count=0):
     phi2: Updated function
     count: the total count of updates done
     """
+    limit = 950
     phi2 = phi.copy()
+
+    # Periodic boundary condition: Ignore first and last indices
     for i in range(1,N-1):
         for j in range(1,N-1):
             phi2[i,j] = 1/4 * (phi[i+1,j] + phi2[i-1,j] + phi[i,j+1] + phi2[i,j-1] + h**2/eps_0*rho[i,j])
     
     # Check that the updated phi is within tolerance, in other words the updated
     # value differs less than the tolerance value
-    if np.max(np.abs(phi-phi2)) > tol:
-         return jacobi(phi2,h,rho,N,count=count+1)
+    if np.max(np.abs(phi-phi2)) > tol and count < limit:
+         return gs(phi2,h,rho,N,count=count+1)
     else: 
         return phi2, count
 
@@ -93,6 +98,8 @@ def sor(phi, h, rho, N, w=1.8, tol=1e-4, count=0):
     count: the total count of updates done
     """
     phi2 = phi.copy()
+
+    # Periodic boundary condition: Ignore first and last indices
     for i in range(1,N-1):
         for j in range(1,N-1):
             phi2[i,j] = (1-w)*phi[i,j] + w/4 * (phi[i+1,j] + phi2[i-1,j] + phi[i,j+1] + phi2[i,j-1] + h**2*rho[i,j]/eps_0)
@@ -100,7 +107,7 @@ def sor(phi, h, rho, N, w=1.8, tol=1e-4, count=0):
     # Check that the updated phi is within tolerance, in other words the updated
     # value differs less than the tolerance value
     if np.max(np.abs(phi-phi2)) > tol:
-         return jacobi(phi2,h,rho,N,count=count+1)
+         return sor(phi2,h,rho,N,count=count+1)
     else: 
         return phi2, count
 
@@ -114,7 +121,7 @@ def main():
     phi = np.zeros((N,N))
 
     # Boundary conditions
-    phi[0,:] = 1
+    phi[:,0] = 1
     phi_jacobi = phi_gs = phi_sor = phi
 
     rho = np.zeros((N,N))
@@ -137,8 +144,6 @@ def main():
     ax1 = Axes3D(fig1)
     ax1.plot_wireframe(X,Y,phi_jacobi)
     ax1.text2D(0., 0.95, "Jacobi method", transform=ax1.transAxes)
-
-
 
     fig2 = plt.figure()
     ax2 = Axes3D(fig2)
