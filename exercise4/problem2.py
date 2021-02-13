@@ -16,10 +16,10 @@ def number_of_electrons(rho, lattice, grid):
     """
     # Calculate the volume around a single block in grid using scalar triple
     # product: a*(bxc)
-    block_volume = np.dot(np.cross(lattice[0]/grid[0],lattice[1]/grid[1]),lattice[2]/grid[2])
+    block_volume = np.dot(np.cross(lattice[0]/grid[1],lattice[1]/grid[1]),lattice[2]/grid[1])
 
     # Calculate the amount of electrons at each block and sum them together
-    N = np.sum(block_volume * rho)
+    N = np.sum(block_volume * rho[0:-1,0:-1,0:-1])
 
     return N
 

@@ -65,23 +65,23 @@ def main():
     phi = np.zeros((N,N))
 
     # Plate potentials
-    phi[5:16,7] = 1
-    phi[5:16,13] = -1
+    phi[7,5:16] = 1
+    phi[13,5:16] = -1
 
     # Charge density on the plates
     rho = np.zeros((N,N))
-    rho[5:16,7] = 1
-    rho[5:16,13] = -1
+    rho[7,5:16] = 1
+    rho[13,5:16] = -1
 
     x = np.linspace(-1,1,N)
     y = np.linspace(-1,1,N)
-    X,Y = np.meshgrid(x,y)
+    X,Y = np.meshgrid(x,y,indexing='ij')
 
     # Create potential profile using SOR method with omega = 1.8
     sol = sor(phi, h, rho, N)
 
     # Calculate the electric field, E = -nabla*phi
-    Ey,Ex = np.gradient(sol)
+    Ex,Ey = np.gradient(sol)
     Ex = -Ex
     Ey = -Ey
 
@@ -93,7 +93,8 @@ def main():
     ax1.set_ylabel('Y')
     ax1.text2D(0., 0.95, "Potential profile", transform=ax1.transAxes)
 
-    fig2 = plt.figure()
+    # Plotting the electric field caused by the two plates
+    plt.figure()
     plt.quiver(X,Y,Ex,Ey)
 
     # Plates
@@ -107,7 +108,7 @@ def main():
     plt.plot([1,1],[-1,1],'k',linewidth=2)
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title(r"Electric field $ E = -\nabla\Phi(x,y)$")
+    plt.title(r"Electric field due to two plates, $ E = -\nabla\Phi(x,y)$")
 
     plt.show()
 

@@ -20,20 +20,24 @@ def eom_lf(Q, t, E, B, qem, qbm):
     Equation of motion for the particle under a constant electric and magnetic field.
 
     Arguments:
-    Q: Array with values for the position and velocity of the particle
-       (x,y,z,vx,vy,vz)
-    t: time
-    E = Electric field component
-    B = Magnetic field component
-    qem = qE/m
-    qbm = qB/m
+    Q:   Array with values for the position and velocity of the particle
+         (x,y,z,vx,vy,vz)
+    t:   time
+    E:   Electric field component
+    B:   Magnetic field component
+    qem: qE/m
+    qbm: qB/m
 
-    Return: Array with dr/dt and dv/dt values
+    Return: numpy array with dr/dt and dv/dt values
     """
 
+    # Get the velocities (vx,vy,vz)
     v = Q[3:]
 
+    # dr/dt = v
     drdt = v
+
+    # dv/dt = q/m (E * v x B)
     dvdt = qem * E + qbm * np.cross(v,B)
 
     return np.concatenate((drdt, dvdt))
@@ -70,7 +74,7 @@ def main():
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(Q[:,0],Q[:,1],Q[:,2])
-    plt.title("Trajectory of a particle for $t \in [0,5]$")
+    plt.title(r"Trajectory of a particle for $t \in [0,5]$")
 
     plt.show()
 

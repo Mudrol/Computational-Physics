@@ -79,7 +79,7 @@ def runge_kutta_test(ax):
     sol=[]
     x=1.0*np.array(y0)
 
-    # Calculate values of x using 4rk
+    # Calculate the 'next' value of x
     for i in range(len(t)):
         sol.append(x)
         x, tp = runge_kutta4(x,t[i],dt,pend,args=(b,c))

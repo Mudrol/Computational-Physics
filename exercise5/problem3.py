@@ -13,7 +13,7 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-eps_0 = 8.854*1e-11     # Vaccuum permittivity
+eps_0 = 8.854*1e-11  # Vaccuum permittivity
 
 def jacobi(phi, h, rho, N, tol=1e-4, count=0):
     """
@@ -21,16 +21,16 @@ def jacobi(phi, h, rho, N, tol=1e-4, count=0):
     reached.
     
     Parameters:
-    phi: function to be updated
-    h: grid spacing
-    rho: charge density
-    N: amount of gridpoints (NxN)
-    tol: tolerance
-    count: counter for amount of updates to reach tolerance
+    phi:    function to be updated
+    h:      grid spacing
+    rho:    charge density
+    N:      amount of gridpoints (NxN)
+    tol:    tolerance
+    count:  counter for amount of updates to reach tolerance
 
     Returns:
-    phi2: Updated function
-    count: the total count of updates done
+    phi2:   Updated function
+    count:  the total count of updates done
 
     """
     phi2 = phi.copy()
@@ -43,6 +43,9 @@ def jacobi(phi, h, rho, N, tol=1e-4, count=0):
     # Check that the updated phi is within tolerance, in other words the updated
     # value differs less than the tolerance value
     if np.max(np.abs(phi-phi2)) > tol:
+
+        # Note: because of recursivity, probably should have a max count parameter
+        #       but not necessarily needed for this program since count < 1000
          return jacobi(phi2,h,rho,N,count=count+1)
     else: 
         return phi2, count
@@ -64,7 +67,7 @@ def gs(phi, h, rho, N, tol=1e-4, count=0):
     phi2: Updated function
     count: the total count of updates done
     """
-    limit = 950
+
     phi2 = phi.copy()
 
     # Periodic boundary condition: Ignore first and last indices
@@ -74,7 +77,7 @@ def gs(phi, h, rho, N, tol=1e-4, count=0):
     
     # Check that the updated phi is within tolerance, in other words the updated
     # value differs less than the tolerance value
-    if np.max(np.abs(phi-phi2)) > tol and count < limit:
+    if np.max(np.abs(phi-phi2)) > tol:
          return gs(phi2,h,rho,N,count=count+1)
     else: 
         return phi2, count
@@ -121,14 +124,15 @@ def main():
     phi = np.zeros((N,N))
 
     # Boundary conditions
-    phi[:,0] = 1
+    phi[0,:] = 1
     phi_jacobi = phi_gs = phi_sor = phi
 
     rho = np.zeros((N,N))
     x = np.linspace(0,L,N)
     y = np.linspace(0,L,N)
-    X,Y = np.meshgrid(x,y)
+    X,Y = np.meshgrid(x,y,indexing='ij')
 
+    # Solve the Poisson equation in 2D with the three methods
     phi_jacobi, n_jacobi = jacobi(phi_jacobi, h, rho, N)
     phi_gs, n_gs = gs(phi_jacobi, h, rho, N)
     phi_sor, n_sor = sor(phi_jacobi, h, rho, N)
@@ -144,21 +148,24 @@ def main():
     ax1 = Axes3D(fig1)
     ax1.plot_wireframe(X,Y,phi_jacobi)
     ax1.text2D(0., 0.95, "Jacobi method", transform=ax1.transAxes)
+    ax1.set_xlabel('x')
+    ax1.set_ylabel('y')
 
     fig2 = plt.figure()
     ax2 = Axes3D(fig2)
     ax2.plot_wireframe(X,Y,phi_gs)
     ax2.text2D(0., 0.95, "Gauss-Seidel method", transform=ax2.transAxes)
+    ax2.set_xlabel('x')
+    ax2.set_ylabel('y')
 
     fig3 = plt.figure()
     ax3 = Axes3D(fig3)
     ax3.plot_wireframe(X,Y,phi_sor)
     ax3.text2D(0., 0.95, "SOR method", transform=ax3.transAxes)
+    ax3.set_xlabel('x')
+    ax3.set_ylabel('y')
 
     plt.show()
-
-
-
 
 
 if __name__=="__main__":
