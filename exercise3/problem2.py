@@ -30,9 +30,11 @@ def main():
     # Function for generating 'experimental data'
     Z = (X+Y)*np.exp(-np.sqrt(X**2+Y**2))
     spl2d = spline_class.spline(x=x,y=y,f=Z,dims=2)
-    x = np.linspace(0,2,10)
+
+    # Upper limit of 1 to make the interpolation more accurate
+    x = np.linspace(0,1,10)
     y = 2*x**2
-    xx = np.linspace(0,2,100)
+    xx = np.linspace(0,1,100)
     yy = 2*xx**2
 
     # Evaluate the function, taking only the diagonal values

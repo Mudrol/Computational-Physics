@@ -34,7 +34,8 @@ def largest_eig(A,tol=1e-12):
     """
 
     # Initialize eigenvector, eigenvalue and the precision
-    eig_vector = np.ones(A.shape[0])
+    # Randomizing the eigenvector gives much more accurate estimation
+    eig_vector = np.random.rand(A.shape[0])
     eig_value = 0.
     prec = 2*tol
 
