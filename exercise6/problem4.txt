@@ -1,0 +1,34 @@
+4a) – Did you find something of interest in the solutions made by others?
+
+I found different good examples on mainly plotting related things for matplotlib which I don't have any previous
+knowledge of.
+
+Also I found out about stating parameter and output types while defining the function:
+e.g. def function(a: int, b: np.ndarray) -> int:
+I think this is really good practise for the future.
+
+b) 
+– Mention two to four new / useful things you have enjoyed learning thus far in the course
+
+I like that the course is in Python because that way I can also learn Python while learning all the computational
+physics related things.
+I've enjoyed learning about the FDM and FEM methods, because they seem really useful especially when the analytical
+solution is not trivial to find.
+In general I've enjoyed discretization in general, which to me feels like the most important subject
+in many parts of computational physics. It is like approximating the space into a lattice.
+
+
+– Do you think the subjects so far will benefit you in your future endeavors? Why?
+
+I think these subjects will be very beneficial to me, since I hope to have a career which includes both
+programming and physics.
+
+
+– How well have you so far done personally? What has been challenging in the course so far? Have you been
+able to schedule a suitable amount of time for the course?
+
+I think I've done well enough to satisfy my own expections. I struggled a bit in the beginning jumping straight
+to multidimensional integration with using only 1d methods, but after that the problems have been the good type
+of challenging. I have probably scheduled a bit more time for this course compared to other courses but thankfully
+the other courses don't require that much of time.
+
