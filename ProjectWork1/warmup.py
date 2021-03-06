@@ -8,35 +8,51 @@
 
     Made by: Matias Hiillos
 """
+
 import numpy as np
 from scipy.integrate import simps
+import matplotlib.pyplot as plt
 
-def integrate_2d():
+def integrate_2d(a1,a2,N):
     """
     This function integrates the function
     """
     N = 50
-    a1 = np.array([1.2, 0.1])    
-    a2 = np.array([0.6, 1.])    
+    a1 = np.array([1.2,0.1])
+    a2 = np.array([0.6,1.])
+    x = np.linspace(0,1,N)
 
-    # Calculate all the gridpoints for the space given by the vectors
-    grid = np.linspace(0,1,N)
-    X,Y = np.meshgrid(grid,grid)
-
-    XX = X*a1[0] + Y*a2[0] 
+    # Get values of function inside grid
+    X,Y = np.meshgrid(x,x)
+    XX = X*a1[0] + Y*a2[0]
     YY = X*a1[1] + Y*a2[1]
+    Z = fun(XX,YY)
 
     # Integrate twice
-    res = simps(simps(fun(XX,YY),XX),grid)
-    print(res)
+    int_x = simps(Z, XX)
+    res = simps(int_x, x)
+    return res, XX, YY, Z
 
 
 def fun(x,y):
     return ((x+y)*np.exp(-0.5*np.sqrt(x**2+y**2)))
 
 def main():
+    N = 500
+    a1 = np.array([1.2,0.1])
+    a2 = np.array([0.6,1.])
 
-    integrate_2d()
+    res, X, Y, Z = integrate_2d(a1,a2,N)
+    print("Value of integral: %.4f" % res)
+
+    # Plot the integrand
+    plt.contourf(X,Y,Z)
+    plt.title(r"Integrand inside the area $\Omega$")
+    plt.xlabel("x")
+    plt.ylabel("y")
+
+
+    plt.show()
 
 if __name__=="__main__":
     main()
