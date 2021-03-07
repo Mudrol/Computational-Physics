@@ -22,7 +22,7 @@ def integrate_2d(a1,a2,N):
     a2 = np.array([0.6,1.])
     x = np.linspace(0,1,N)
 
-    # Get values of function inside grid
+    # Create the coordinates and get the values inside the grid
     X,Y = np.meshgrid(x,x)
     XX = X*a1[0] + Y*a2[0]
     YY = X*a1[1] + Y*a2[1]
