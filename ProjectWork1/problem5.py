@@ -66,40 +66,23 @@ def fdm_2d(N,L,x,y,h,k):
     E, psi = eigsh(A,k=k,which='SM')
 
 
-    # Now add Gaussian perturbation to the potential
-    # Perturbation indeces
-    pert_area = np.array([int(N*0.4),int(N*0.5)])
-    pot_x = pot_x.reshape((N,N))
-    pot_y = pot_y.reshape((N,N))
-
-    # Factors for the Gaussian perturbation
-    a = 10
-    b = -5
-    c = 10
-    # Add perturbation to the area specified by the indeces
-    for i in range(pert_area[0],pert_area[1]):
-        for j in range(pert_area[0],pert_area[1]):
-            pot_y[i][j] = pot_y[i][j] + gauss_fun(np.sqrt(pot_y[i][j]),a,b,c)
-            pot_x[i][j] = pot_x[i][j] + gauss_fun(np.sqrt(pot_x[i][j]),a,b,c)
-    
-    # reshape back to 1d arrays for the Hamiltonian matrix
-    pot_x_1d = pot_x.flatten()
-    pot_y_1d = pot_y.flatten()
+    # Perturbated potential
+    a = 25
+    pot_new = pot_x + pot_y + gauss_pert(N,a).flatten()
 
     # Plot the new potential
     X,Y = np.meshgrid(x,y)
     fig = plt.figure()
     ax = fig.add_subplot(1,2,1,projection='3d')
-    ax.plot_surface(X, Y, pot_x+pot_y, cmap=cm.coolwarm,
+    ax.plot_surface(X, Y, pot_new.reshape((N,N)), cmap=cm.coolwarm,
                            linewidth=0, antialiased=False)
     ax = fig.add_subplot(1,2,2)
     fig.suptitle(r'Potential with a Gaussian perturbation')
-    ax.imshow(pot_x+pot_y,extent=[-L/2,L/2,-L/2,L/2])
+    ax.imshow(pot_new.reshape(N,N),extent=[-L/2,L/2,-L/2,L/2])
     plt.savefig(os.path.join(path,'perturbated_potential.png'))
-    plt.close()
 
     # The perturbated Hamiltonian in matrix form
-    A = (-1*lap + sps.diags(pot_x_1d) + sps.diags(pot_y_1d))/2
+    A = (-1*lap + sps.diags(pot_new))/2
 
     # Calculate the k smallest eigenvalues and corresponding eigenvector
     # Of the perturbated system
@@ -149,19 +132,27 @@ def analytical_energies(n):
     energies = np.sort(energies)
     return energies
 
-def gauss_fun(x,a,b,c):
-    """Gaussian function used for creating perturbation.
-       Parameters used for Gaussian function are a=10, b=-5, c=10.
-       -> f(x) = 10*exp(-(x+5)^2/200)
+def gauss_pert(N,a):
+    """Gaussian function used for creating perturbation. Creates the perturbation
+       peak around a location x0,y0
 
     Args:
-        x : coordinate
+        N: Amount of gridpoints in a direction
+        a: Coefficient for the value of the peak
 
     Returns:
-        function value at x
+        The gaussian perturbation in meshgrid form
     """
+    x = np.arange(0,N,1,float)
+    y = x[:,np.newaxis]
 
-    return a*np.exp(-(x-b)**2/(2*c**2))
+    # Choose the location of the peak
+    x0 = y0 = int(0.4*N)
+
+    # Choose the fwhm, 'width' of the perturbation
+    fwhm = N/15
+
+    return a*np.exp(-4*np.log(2) * ((x-x0)**2 + (y-y0)**2) / fwhm**2)
 
 def normalized_density(psi,x):
     """Normalizes a single state, and returns the energy density
