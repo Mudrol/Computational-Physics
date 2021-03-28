@@ -336,7 +336,7 @@ def main():
     off = offdiag_potential_energy(orbitals,x)
     E_kin_hf = diagonal_energy(T,orbitals,x)
     E_pot_hf = diagonal_energy(sp.diags(Vext,0),orbitals,x) + off + exchange_energy(orbitals,spins,x)
-    E_tot_hf = E_kin + E_pot
+    E_tot_hf = E_kin_hf + E_pot_hf
     print('Total energy     ', E_tot_hf)
     print('Kinetic energy   ', E_kin_hf)
     print('Potential energy ', E_pot_hf) 
