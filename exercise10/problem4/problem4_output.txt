@@ -1,0 +1,2 @@
+The DMC ground state energy for graphene is:
+    -45.82701092798589 +/- 0.0030690587433490515 Ha
