@@ -1,0 +1,10 @@
+Efficiency of VMC can be improved by:
+- Optimizing/guessing a better wave function (in this program, optimizing a)
+- Jastrow factor can be optimized by using different b1 values
+- In the DMC simulations, the frequency of trial energy update and the optimized value of alpha
+  may lead to more efficient calculations
+
+
+- Wave function parameters for VMC can be optimized by running the VMC with different values
+of parameters and observing the minimal variance, as done during the exercise. Also, a known 
+wave function can be used by adding additional terms (for example Jastrow function).

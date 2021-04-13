@@ -1,0 +1,16 @@
+
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+export PATH="/projappl/project_2000924/student054/qe-6.7.0/bin:/projappl/project_2000924/student054/qmcpack/nexus/bin:/projappl/project_2000924/student054/qmcpack/build_csc_puhti_complex_only/bin:$PATH"
+
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+export PYTHONPATH="/projappl/project_2000924/student054/qmcpack/nexus/lib:$PYTHONPATH"

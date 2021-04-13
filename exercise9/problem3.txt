@@ -1,0 +1,17 @@
+qmca -e 5 -q ev *scalar.dat gave the result:
+
+LocalEnergy -87.797555 +- 0.049231 (Ha)
+Variance 16.553972 +- 0.402940 (Ha)
+
+-e 5 specifies the Equilibration length in blocks
+-q ev means that the quantities e and v (LocalEnergy & Variance) are analyzed
+
+From scf: -22.52257768 Ry.
+
+The VMC energy is roughly 8 times larger in magnitude. This results from the
+tiling = (2,2,2) parameter, which creates a 2x2x2 supercell from the 2-atom primitive cell,
+resulting in 16-atom shell and makes the energy 2^3 = 8 times larger.
+
+
+The structure files in scf and vmc folders looked identical. How I understood it is that the unit cells should be the same, but in VMC the tiling parameter being (2,2,2)
+means that it does the calculations in a cell thats made from 8 of these smaller cells
