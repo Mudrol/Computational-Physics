@@ -1,0 +1,5 @@
+Temperature T = 3.0 K
+Grid Size = 100
+Dimensions of the system: 2d, 10x10
+Boundary conditions: Periodic
+Exchange constant J = 4.0, units of k_B
