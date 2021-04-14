@@ -39,6 +39,7 @@ class Walker:
     
 
 def Energy(Walkers):
+    """ Returns energy of a microstate s """
     E = 0.0
     J = 4.0 # given in units of k_B
     # Simplest Ising model assumption: interaction only between nearest neighbors.
@@ -52,16 +53,26 @@ def Energy(Walkers):
 def site_Energy(Walkers,Walker):
     E = 0.0
     J = 4.0 # given in units of k_B
+    # Simple Ising model, interaction only between nn
     for k in range(len(Walker.nearest_neighbors)):
         j = Walker.nearest_neighbors[k]
         E += -J*Walker.spin*Walkers[j].spin
     return E
+
+
+def Magnetization(Walkers):
+    """ Returns the magnetic moment of microstate s """
+    mag = 0.0
+    for walker in Walkers:
+        mag += walker.spin
+    return mag
 
 def ising(Nblocks,Niters,Walkers,beta):
     M = len(Walkers)
     Eb = zeros((Nblocks,))
     Accept=zeros((Nblocks,))
     AccCount=zeros((Nblocks,))
+    mag = zeros((Nblocks,))
 
     obs_interval = 5
     for i in range(Nblocks):
@@ -74,7 +85,6 @@ def ising(Nblocks,Niters,Walkers,beta):
 
             #coinflip for flipping spin
             s_new = random.randint(2) - 0.5
-
             Walkers[site].spin = 1.0*s_new
 
             E_new = site_Energy(Walkers,Walkers[site])
@@ -83,6 +93,8 @@ def ising(Nblocks,Niters,Walkers,beta):
             # Metropolis Monte Carlo
             # Spin only flips between two states (uniform distribution),
             # so only the energy of these microstates needs to be measured
+            # TODO: Check that metropolis algorithm works properly
+            # 'favor parallel alignment of pairs of spins.'
             q_s_sp = exp(-beta*(deltaE))
             if (q_s_sp > random.rand()):
                     Accept[i] += 1.0
@@ -91,6 +103,7 @@ def ising(Nblocks,Niters,Walkers,beta):
             AccCount[i] += 1
             if j % obs_interval == 0:
                 E_tot = Energy(Walkers)/M # energy per spin
+                mag[i] = Magnetization(Walkers)/M # magnetization per spin
                 Eb[i] += E_tot
                 EbCount += 1
             
@@ -101,7 +114,7 @@ def ising(Nblocks,Niters,Walkers,beta):
         print('    Acc = {0:.5f}'.format(Accept[i]))
 
 
-    return Walkers, Eb, Accept
+    return Walkers, Eb, Accept, mag
 
 
 def main():
@@ -146,12 +159,16 @@ def main():
     Notice: Energy is measured in units of k_B, which is why
             beta = 1/T instead of 1/(k_B T)
     """
-    Walkers, Eb, Acc = ising(Nblocks,Niters,Walkers,beta)
+    Walkers, Eb, Acc, mag = ising(Nblocks,Niters,Walkers,beta)
 
     plot(Eb)
     Eb = Eb[eq:]
     print('Ising total energy: {0:.5f} +/- {1:0.5f}'.format(mean(Eb), std(Eb)/sqrt(len(Eb))))
     print('Variance to energy ratio: {0:.5f}'.format(abs(var(Eb)/mean(Eb)))) 
+    print('Heat capacity: {0:.5f}'.format((mean(abs(Eb)**2)-mean(abs(Eb))**2)*beta**2)) # Wrong at the moment
+    print('Magnetization: {0:.5f}'.format(mean(mag)))
+    print('Magnetic susceptibility: {0:.5f}'.format((mean(abs(mag)**2))-(mean(abs(mag))**2)*beta)) # Wrong at the moment
+  
     show()
 
 if __name__=="__main__":
