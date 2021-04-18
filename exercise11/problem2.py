@@ -24,7 +24,6 @@ Phase transition happens around T = 2.5K
 
 from numpy import *
 from matplotlib.pyplot import *
-import matplotlib.patches as mpatches
 from scipy.special import erf
 
 class Walker:
@@ -106,13 +105,11 @@ def ising(Nblocks,Niters,Walkers,beta):
             AccCount[i] += 1
             if j % obs_interval == 0:
                 E_tot = Energy(Walkers)/M # energy per spin
-                mag[i] += abs(magnetic_moment(Walkers))/M # magn. moment per spin
+                mag[i] = abs(magnetic_moment(Walkers))/M # magn. moment per spin
                 Eb[i] += E_tot
                 EbCount += 1
             
         Eb[i] /= EbCount
-        mag[i] /= EbCount
-
         Accept[i] /= AccCount[i]
 
         """
@@ -168,28 +165,6 @@ def main():
     """
     Walkers, Eb, Acc, mag = ising(Nblocks,Niters,Walkers,beta)
 
-    # Plot the behavior of these observables as a function of "mc" time (p2)
-    # Note: Cv and magnetic susceptibility not plotted.
-    meanmag = mean(mag[eq:])
-    meanEb = mean(Eb[eq:])
-    figure()
-    plot(Eb)
-    plot([eq,eq],gca().get_ylim(),'k--')
-    text = mpatches.Patch(color='white',label='Mean: {:.4f}'.format(meanEb))
-    xlabel('mc time')
-    ylabel('E')
-    legend(handles=[text])
-    savefig('problem2_E.png')
-    figure()
-    plot(mag)
-    plot([eq,eq],gca().get_ylim(),'k--')
-    text = mpatches.Patch(color='white',label='Mean: {:.4f}'.format(meanmag))
-    xlabel('mc time')
-    ylabel('M')
-    legend(handles=[text])
-    savefig('problem2_M.png')
-
-
     #plot(Eb)
     Eb = Eb[eq:]
     print('Ising total energy: {0:.5f} +/- {1:0.5f}'.format(mean(Eb), std(Eb)/sqrt(len(Eb))))
@@ -200,9 +175,6 @@ def main():
     print('Heat capacity: {0:.5f}'.format((mean(abs(Eb)**2)-mean(abs(Eb))**2)/T**2)) # add scaling factor
     print('Magnetization: {0:.5f}'.format(mean(mag)))
     print('Magnetic susceptibility: {0:.5f}'.format((mean(abs(mag)**2)-mean(abs(mag))**2)/T)) # add scaling factor
-
-
-
 
     # Now Calculate the observables for temperatures in range [0.5, 6.0]
     sims = 20 # Temperature points
@@ -223,7 +195,6 @@ def main():
         Walkers, Eb, Acc, mag = ising(Nblocks,Niters,Walkers,beta)
         
         Eb = Eb[eq:]
-        mag = mag[eq:]
 
         Cv = (mean(abs(Eb)**2)-mean(abs(Eb))**2)/temp**2
         magn_mean = mean(mag)
@@ -242,7 +213,6 @@ def main():
     x = [2.5, 2.5]
 
     # Plotting
-
     figure()
     errorbar(temps,Es,yerr = Es_std)
     xlabel('T')
@@ -265,7 +235,6 @@ def main():
     ylabel('Susceptibility per spin')
     plot(x,gca().get_ylim(),'k--')
     savefig('problem3_susceptibility_per_spin.png')
-
     #show()
 
 if __name__=="__main__":
