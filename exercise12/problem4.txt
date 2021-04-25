@@ -1,0 +1,27 @@
+– Mention two to four new / useful / interesting things you have enjoyed getting more familiar with during the
+course.
+
+*I haven't done much MC-simulations during other courses, so it was really enjoyable learning about all these different methods,
+they also seem really useful. Additionally, the MD methods were also very interesting, because it would probably be fun to make a system animated using those.
+*Learning about these subjects greatly increased my skills in Python, which has been really beneficial for me since I haven't used the language that much.
+
+– Do you think the subjects will benefit you in your future endeavors? Why?
+* Yes, because I'm aiming for my future career to include computing to some extent. Even if it wouldn't,
+I would still have benefited from the various ways of doing data analysis with Python.
+
+– How well have you performed in terms of understanding and performance?
+*I think I have grasped at least all the basics of each subject, and understood majority
+of the things learned during this course. I believe my performance has also been good, satisfying
+my own standards.
+
+– What has been challenging to you in the course?
+*Hardest things during the course were the introductions to Hartree approximation and VMC,DMC methods.
+**It was a big help that many of the required functions for the algorithms were already done, making it easier to understand.
+
+– Have you been able to schedule a suitable amount of time for the course?
+*Yes
+
+– How would you improve the course and its contents?
+* The course topics seem really full, and many good topics are only introduced really fast (i.e. Fourier, FDM). Dividing the course into two would allow all the topics to be covered
+really well and also allow more interesting topics to be covered. From the current topics, I can't think of any topics that should be replaced by other topics, as they all felt like important
+things to learn.
