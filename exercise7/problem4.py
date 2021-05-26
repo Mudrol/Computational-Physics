@@ -235,7 +235,7 @@ def main():
     # e.g., occ = [0,0,1,1] means lowest up and down, next lowest up and down
     #       occ = [0,1,2,3] means all spin up
     occ_0 = [0,0,1,1,2,2] # Ground state
-    occ_3 = [0,0,1,2,3,3] # S=3: spin down from 2 excited and both spins from 2 excited
+    occ_3 = [0,0,1,2,3,3] # S=3: Compared to ground, spin down from 2nd lowest excited, and both spins from third lowest excited
     occs = [occ_0, occ_3] # For creating for loop
     
     # grid

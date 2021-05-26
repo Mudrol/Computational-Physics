@@ -243,6 +243,7 @@ def main():
     dims = 3
     dt = 0.1
     mass = 1860.0
+    kB = 3.1668114e-6 # boltzmann constant, Ha/K
 
     # Initialize atoms
     atoms = []    
@@ -273,7 +274,7 @@ def main():
     E_totsq = array(observables.E_totsq)
     T = array(observables.Temperature)
     r = array(observables.distance)
-    Cv = (mean(E_totsq)-mean(E_tot)**2)/mean(T)**2 # Still wrong
+    Cv = (mean(E_totsq)-mean(E_tot)**2)/kB/mean(T)**2 # Still wrong
     print('E_kin',mean(E_kin))
     print('E_pot',mean(E_pot))
     print('E_tot',mean(E_tot))

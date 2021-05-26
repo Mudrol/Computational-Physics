@@ -407,6 +407,6 @@ def ising_temperature():
     show()
 
 if __name__=="__main__":
-    main()
+    main() # For the simulation with varying grid sizes
     #ising_temperature() # For performing the simulations with varying temperatures
         
